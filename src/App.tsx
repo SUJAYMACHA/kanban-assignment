@@ -105,47 +105,45 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-neutral-50">
-      <header className="bg-white border-b border-neutral-200 px-4 sm:px-6 py-4 shadow-sm">
+    <div className="h-screen bg-neutral-50 flex flex-col">
+      <header className="bg-white border-b border-neutral-200 px-4 sm:px-6 py-3 shadow-sm flex-shrink-0">
         <div className="max-w-7xl mx-auto">
-          <h1 className="text-2xl sm:text-3xl font-bold text-neutral-900 mb-2">
+          <h1 className="text-xl sm:text-2xl font-bold text-neutral-900 mb-1">
             Kanban Board
           </h1>
-          <p className="text-sm sm:text-base text-neutral-600">
-            A production-grade Kanban board with drag-and-drop, task management, and responsive design
+          <p className="text-xs sm:text-sm text-neutral-600 mb-2">
+            Production-grade drag-and-drop task management
           </p>
-          <div className="mt-3 flex flex-wrap gap-2 text-xs sm:text-sm text-neutral-500">
+          <div className="flex flex-wrap gap-2 text-xs text-neutral-500">
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-primary-500 rounded-full"></span>
+              <span className="w-1.5 h-1.5 bg-primary-500 rounded-full"></span>
               React + TypeScript
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-success-500 rounded-full"></span>
+              <span className="w-1.5 h-1.5 bg-success-500 rounded-full"></span>
               Tailwind CSS
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-warning-500 rounded-full"></span>
+              <span className="w-1.5 h-1.5 bg-warning-500 rounded-full"></span>
               Drag & Drop
             </span>
             <span className="flex items-center gap-1">
-              <span className="w-2 h-2 bg-error-500 rounded-full"></span>
+              <span className="w-1.5 h-1.5 bg-error-500 rounded-full"></span>
               Accessible
             </span>
           </div>
         </div>
       </header>
       
-      <main className="pb-8" style={{ height: 'calc(100vh - 140px)' }}>
-        <div className="max-w-7xl mx-auto px-2 sm:px-4 pt-4">
-          <KanbanBoard
-            columns={columns}
-            tasks={tasks}
-            onTaskMove={handleTaskMove}
-            onTaskCreate={handleTaskCreate}
-            onTaskUpdate={handleTaskUpdate}
-            onTaskDelete={handleTaskDelete}
-          />
-        </div>
+      <main className="flex-1 overflow-hidden">
+        <KanbanBoard
+          columns={columns}
+          tasks={tasks}
+          onTaskMove={handleTaskMove}
+          onTaskCreate={handleTaskCreate}
+          onTaskUpdate={handleTaskUpdate}
+          onTaskDelete={handleTaskDelete}
+        />
       </main>
     </div>
   );

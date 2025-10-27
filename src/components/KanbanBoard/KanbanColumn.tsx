@@ -116,8 +116,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
   return (
     <div 
       className={clsx(
-        'flex flex-col bg-neutral-50 rounded-xl border border-neutral-200 h-full',
-        'min-w-72 w-72 sm:min-w-80 sm:w-80 md:min-w-80 md:w-80',
+        'flex flex-col bg-neutral-50 rounded-xl border border-neutral-200',
+        'min-w-[280px] w-[280px] sm:min-w-80 sm:w-80 flex-shrink-0',
         {
           'bg-primary-50 border-primary-200': isDropTarget,
         }
@@ -153,16 +153,15 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
 
       {/* Tasks Container */}
       <div 
-        className="flex-1 p-3 space-y-3 overflow-y-auto scrollbar-hide"
+        className="flex-1 p-2 space-y-2 overflow-y-auto scrollbar-hide min-h-0"
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
         onDrop={handleDrop}
-        style={{ minHeight: '200px' }}
       >
         {renderDropZone(0)}
         
         {visibleTasks.length === 0 && !draggedTaskId && (
-          <div className="flex items-center justify-center h-24 text-neutral-400 text-sm border-2 border-dashed border-neutral-200 rounded-lg">
+          <div className="flex items-center justify-center h-16 text-neutral-400 text-sm border-2 border-dashed border-neutral-200 rounded-lg">
             No tasks yet
           </div>
         )}
@@ -185,7 +184,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
       </div>
 
       {/* Add Task Button */}
-      <div className="p-3 border-t border-neutral-200">
+      <div className="p-2 border-t border-neutral-200 flex-shrink-0">
         <Button
           variant="ghost"
           size="sm"

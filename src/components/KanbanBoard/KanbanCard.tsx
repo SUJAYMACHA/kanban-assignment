@@ -68,7 +68,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = memo(({
       aria-label={`${task.title}. Status: ${task.status}. ${task.priority ? `Priority: ${task.priority}.` : ''} Press enter to edit, delete to remove.`}
       aria-grabbed={isDragging}
       className={clsx(
-        'bg-white border border-neutral-200 rounded-lg p-3 shadow-card transition-all duration-200 cursor-grab select-none',
+        'bg-white border border-neutral-200 rounded-lg p-2.5 shadow-card transition-all duration-200 cursor-grab select-none',
         'hover:shadow-card-hover focus:outline-none focus-visible',
         'active:cursor-grabbing touch-manipulation',
         'sm:hover:scale-105',
@@ -79,13 +79,13 @@ export const KanbanCard: React.FC<KanbanCardProps> = memo(({
       )}
     >
       {/* Header with title and priority */}
-      <div className="flex items-start justify-between mb-2">
+      <div className="flex items-start justify-between mb-1.5">
         <h4 className="font-medium text-sm text-neutral-900 line-clamp-2 flex-1 mr-2">
           {task.title}
         </h4>
         {task.priority && (
           <span className={clsx(
-            'text-xs px-2 py-0.5 rounded font-medium whitespace-nowrap',
+            'text-xs px-1.5 py-0.5 rounded font-medium whitespace-nowrap',
             priorityBadge
           )}>
             {task.priority}
@@ -95,7 +95,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = memo(({
 
       {/* Description */}
       {task.description && (
-        <p className="text-xs text-neutral-600 mb-3 line-clamp-2">
+        <p className="text-xs text-neutral-600 mb-2 line-clamp-2">
           {task.description}
         </p>
       )}
