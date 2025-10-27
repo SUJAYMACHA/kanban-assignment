@@ -1,9 +1,9 @@
 import { KanbanColumn, KanbanTask } from './KanbanBoard.types';
 
 export const sampleColumns: KanbanColumn[] = [
-  { id: 'todo', title: 'To Do', color: '#6b7280', taskIds: ['task-1', 'task-2'], maxTasks: 10 },
-  { id: 'in-progress', title: 'In Progress', color: '#3b82f6', taskIds: ['task-3'], maxTasks: 5 },
-  { id: 'review', title: 'Review', color: '#f59e0b', taskIds: [], maxTasks: 3 },
+  { id: 'todo', title: 'To Do', color: '#6b7280', taskIds: ['task-1', 'task-2', 'task-6'], maxTasks: 10 },
+  { id: 'in-progress', title: 'In Progress', color: '#3b82f6', taskIds: ['task-3', 'task-7'], maxTasks: 5 },
+  { id: 'review', title: 'Review', color: '#f59e0b', taskIds: ['task-8'], maxTasks: 3 },
   { id: 'done', title: 'Done', color: '#10b981', taskIds: ['task-4', 'task-5'] },
 ];
 
@@ -58,6 +58,39 @@ export const sampleTasks: Record<string, KanbanTask> = {
     assignee: 'John Doe',
     tags: ['setup'],
     createdAt: new Date(2024, 0, 8),
+  },
+  'task-6': {
+    id: 'task-6',
+    title: 'Add responsive design',
+    description: 'Implement mobile-first responsive design for all components',
+    status: 'todo',
+    priority: 'high',
+    assignee: 'Sarah Wilson',
+    tags: ['responsive', 'css', 'mobile'],
+    createdAt: new Date(2024, 0, 12),
+    dueDate: new Date(2024, 0, 25),
+  },
+  'task-7': {
+    id: 'task-7',
+    title: 'Implement accessibility features',
+    description: 'Add ARIA labels, keyboard navigation, and screen reader support',
+    status: 'in-progress',
+    priority: 'urgent',
+    assignee: 'Alex Chen',
+    tags: ['accessibility', 'a11y', 'keyboard'],
+    createdAt: new Date(2024, 0, 13),
+    dueDate: new Date(2024, 0, 22),
+  },
+  'task-8': {
+    id: 'task-8',
+    title: 'Performance optimization',
+    description: 'Optimize rendering with React.memo and useMemo for large datasets',
+    status: 'review',
+    priority: 'medium',
+    assignee: 'Mike Rodriguez',
+    tags: ['performance', 'optimization', 'react'],
+    createdAt: new Date(2024, 0, 14),
+    dueDate: new Date(2024, 0, 28),
   },
 };
 

@@ -93,7 +93,7 @@ export const KanbanBoard: React.FC<KanbanViewProps> = ({
 
   return (
     <div 
-      className="flex h-full overflow-x-auto overflow-y-hidden bg-neutral-50 p-3 md:p-6 gap-3 md:gap-6"
+      className="flex h-full min-h-[600px] overflow-x-auto overflow-y-hidden bg-neutral-50 p-3 md:p-6 gap-3 md:gap-6"
       onKeyDown={handleKeyDown}
       role="main"
       aria-label="Kanban board"
