@@ -48,6 +48,8 @@ export interface KanbanColumnProps {
   draggedTaskId: string | null;
   dropTargetIndex: number | null;
   isDropTarget: boolean;
+  isCollapsed?: boolean;
+  onToggleCollapse?: (columnId: string) => void;
 }
 
 export interface TaskModalProps {

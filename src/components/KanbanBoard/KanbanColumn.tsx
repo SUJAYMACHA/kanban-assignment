@@ -21,6 +21,8 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
   draggedTaskId,
   dropTargetIndex,
   isDropTarget,
+  isCollapsed = false,
+  onToggleCollapse,
 }) => {
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
   
@@ -116,9 +118,10 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
   return (
     <div 
       className={clsx(
-        'flex flex-col bg-neutral-50 rounded-xl border border-neutral-200',
-        'min-w-[280px] w-[280px] sm:min-w-80 sm:w-80 flex-shrink-0',
+        'flex flex-col bg-neutral-50 rounded-xl border border-neutral-200 w-full',
         {
+          // Desktop layout (lg screens and up) - fixed width with flex-shrink-0
+          'lg:min-w-[280px] lg:w-[280px] lg:flex-shrink-0': !isCollapsed,
           'bg-primary-50 border-primary-200': isDropTarget,
         }
       )}
@@ -126,7 +129,7 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
       aria-label={`${column.title} column. ${tasks.length} tasks.${wipLimitText ? ` ${wipLimitText}` : ''}`}
     >
       {/* Column Header */}
-      <div className={getColumnHeaderClasses(column)}>
+      <div className={clsx(getColumnHeaderClasses(column), 'relative')}>
         <div className="flex items-center space-x-2">
           <div 
             className="w-3 h-3 rounded-full"
@@ -137,67 +140,93 @@ export const KanbanColumn: React.FC<KanbanColumnProps> = memo(({
           <span className="text-sm text-neutral-500">({tasks.length})</span>
         </div>
         
-        {column.maxTasks && (
-          <div className={clsx(
-            'text-xs font-medium px-2 py-1 rounded',
-            {
-              'bg-red-100 text-red-700': columnStatus === 'limit',
-              'bg-yellow-100 text-yellow-700': columnStatus === 'warning',
-              'bg-neutral-100 text-neutral-600': columnStatus === 'normal',
-            }
-          )}>
-            {wipLimitText}
-          </div>
-        )}
-      </div>
-
-      {/* Tasks Container */}
-      <div 
-        className="flex-1 p-2 space-y-2 overflow-y-auto scrollbar-hide min-h-0"
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
-        onDrop={handleDrop}
-      >
-        {renderDropZone(0)}
-        
-        {visibleTasks.length === 0 && !draggedTaskId && (
-          <div className="flex items-center justify-center h-16 text-neutral-400 text-sm border-2 border-dashed border-neutral-200 rounded-lg">
-            No tasks yet
-          </div>
-        )}
-        
-        {visibleTasks.map((task, index) => (
-          <React.Fragment key={task.id}>
-            <div className="group relative">
-              <KanbanCard
-                task={task}
-                isDragging={task.id === draggedTaskId}
-                onEdit={onTaskEdit}
-                onDelete={onTaskDelete}
-                onDragStart={handleTaskDragStart}
-                onDragEnd={handleTaskDragEnd}
-              />
+        <div className="flex items-center space-x-2">
+          {column.maxTasks && (
+            <div className={clsx(
+              'text-xs font-medium px-2 py-1 rounded',
+              {
+                'bg-red-100 text-red-700': columnStatus === 'limit',
+                'bg-yellow-100 text-yellow-700': columnStatus === 'warning',
+                'bg-neutral-100 text-neutral-600': columnStatus === 'normal',
+              }
+            )}>
+              {wipLimitText}
             </div>
-            {renderDropZone(index + 1)}
-          </React.Fragment>
-        ))}
+          )}
+          
+          {/* Toggle button for mobile/tablet */}
+          {onToggleCollapse && (
+            <button
+              onClick={() => onToggleCollapse(column.id)}
+              className="lg:hidden p-1 rounded-md hover:bg-neutral-200 transition-colors"
+              aria-label={isCollapsed ? `Expand ${column.title} column` : `Collapse ${column.title} column`}
+            >
+              <svg 
+                className={clsx('w-4 h-4 transition-transform duration-200', {
+                  'rotate-180': isCollapsed
+                })} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Add Task Button */}
-      <div className="p-2 border-t border-neutral-200 flex-shrink-0">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleAddTask}
-          disabled={isAtLimit}
-          className="w-full justify-start text-neutral-600 hover:text-neutral-900"
-        >
-          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
-          {isAtLimit ? 'At WIP limit' : 'Add task'}
-        </Button>
-      </div>
+      {/* Tasks Container - Only show when not collapsed */}
+      {!isCollapsed && (
+        <>
+          <div 
+            className="flex-1 p-2 space-y-2 overflow-y-auto scrollbar-hide min-h-0 flex flex-col items-center"
+            onDragOver={handleDragOver}
+            onDragLeave={handleDragLeave}
+            onDrop={handleDrop}
+          >
+            {renderDropZone(0)}
+            
+            {visibleTasks.length === 0 && !draggedTaskId && (
+              <div className="flex items-center justify-center h-16 text-neutral-400 text-sm border-2 border-dashed border-neutral-200 rounded-lg">
+                No tasks yet
+              </div>
+            )}
+            
+            {visibleTasks.map((task, index) => (
+              <React.Fragment key={task.id}>
+                <div className="group relative w-full flex justify-center">
+                  <KanbanCard
+                    task={task}
+                    isDragging={task.id === draggedTaskId}
+                    onEdit={onTaskEdit}
+                    onDelete={onTaskDelete}
+                    onDragStart={handleTaskDragStart}
+                    onDragEnd={handleTaskDragEnd}
+                  />
+                </div>
+                {renderDropZone(index + 1)}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* Add Task Button */}
+          <div className="p-2 border-t border-neutral-200 flex-shrink-0">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleAddTask}
+              disabled={isAtLimit}
+              className="w-full justify-start text-neutral-600 hover:text-neutral-900"
+            >
+              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              </svg>
+              {isAtLimit ? 'At WIP limit' : 'Add task'}
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 });

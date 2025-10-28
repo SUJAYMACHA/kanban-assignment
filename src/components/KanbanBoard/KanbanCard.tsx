@@ -68,7 +68,7 @@ export const KanbanCard: React.FC<KanbanCardProps> = memo(({
       aria-label={`${task.title}. Status: ${task.status}. ${task.priority ? `Priority: ${task.priority}.` : ''} Press enter to edit, delete to remove.`}
       aria-grabbed={isDragging}
       className={clsx(
-        'bg-white border border-neutral-200 rounded-lg p-2.5 shadow-card transition-all duration-200 cursor-grab select-none',
+        'bg-white border border-neutral-200 rounded-lg p-2.5 shadow-card transition-all duration-200 cursor-grab select-none w-full max-w-none',
         'hover:shadow-card-hover focus:outline-none focus-visible',
         'active:cursor-grabbing touch-manipulation',
         'sm:hover:scale-105',

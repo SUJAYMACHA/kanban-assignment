@@ -15,6 +15,7 @@ export const KanbanBoard: React.FC<KanbanViewProps> = ({
   const [selectedTask, setSelectedTask] = useState<KanbanTask | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedColumnId, setSelectedColumnId] = useState<string | null>(null);
+  const [collapsedColumns, setCollapsedColumns] = useState<Set<string>>(new Set());
   
   const {
     draggedTaskId,
@@ -51,6 +52,18 @@ export const KanbanBoard: React.FC<KanbanViewProps> = ({
     setIsModalOpen(false);
     setSelectedTask(null);
     setSelectedColumnId(null);
+  }, []);
+
+  const handleColumnToggle = useCallback((columnId: string) => {
+    setCollapsedColumns(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(columnId)) {
+        newSet.delete(columnId);
+      } else {
+        newSet.add(columnId);
+      }
+      return newSet;
+    });
   }, []);
 
   const handleTaskSave = useCallback((taskData: KanbanTask, isNew: boolean) => {
@@ -93,25 +106,70 @@ export const KanbanBoard: React.FC<KanbanViewProps> = ({
 
   return (
     <div 
-      className="flex h-full overflow-x-auto overflow-y-hidden bg-neutral-50 p-2 sm:p-4 gap-2 sm:gap-4"
+      className="h-full bg-neutral-50 p-2 sm:p-4"
       onKeyDown={handleKeyDown}
       role="main"
       aria-label="Kanban board"
     >
-      {columns.map((column) => (
-        <KanbanColumn
-          key={column.id}
-          column={column}
-          tasks={tasksByColumn[column.id] || []}
-          onTaskMove={handleTaskMoveInternal}
-          onTaskCreate={handleTaskCreateInColumn}
-          onTaskEdit={handleTaskEdit}
-          onTaskDelete={onTaskDelete}
-          draggedTaskId={draggedTaskId}
-          dropTargetIndex={dropTargetColumn === column.id ? dropTargetIndex : null}
-          isDropTarget={dropTargetColumn === column.id}
-        />
-      ))}
+      {/* Desktop Layout - Horizontal Scrolling (lg screens and up) */}
+      <div className="hidden lg:flex h-full overflow-x-auto overflow-y-hidden gap-4 justify-center px-2">
+        {columns.map((column) => (
+          <KanbanColumn
+            key={column.id}
+            column={column}
+            tasks={tasksByColumn[column.id] || []}
+            onTaskMove={handleTaskMoveInternal}
+            onTaskCreate={handleTaskCreateInColumn}
+            onTaskEdit={handleTaskEdit}
+            onTaskDelete={onTaskDelete}
+            draggedTaskId={draggedTaskId}
+            dropTargetIndex={dropTargetColumn === column.id ? dropTargetIndex : null}
+            isDropTarget={dropTargetColumn === column.id}
+            isCollapsed={false}
+            onToggleCollapse={handleColumnToggle}
+          />
+        ))}
+      </div>
+
+      {/* Medium Screens Layout - 2 columns per row with toggle buttons */}
+      <div className="hidden md:grid lg:hidden grid-cols-2 gap-4 h-full overflow-y-auto justify-center px-2">
+        {columns.map((column) => (
+          <KanbanColumn
+            key={column.id}
+            column={column}
+            tasks={tasksByColumn[column.id] || []}
+            onTaskMove={handleTaskMoveInternal}
+            onTaskCreate={handleTaskCreateInColumn}
+            onTaskEdit={handleTaskEdit}
+            onTaskDelete={onTaskDelete}
+            draggedTaskId={draggedTaskId}
+            dropTargetIndex={dropTargetColumn === column.id ? dropTargetIndex : null}
+            isDropTarget={dropTargetColumn === column.id}
+            isCollapsed={collapsedColumns.has(column.id)}
+            onToggleCollapse={handleColumnToggle}
+          />
+        ))}
+      </div>
+
+      {/* Mobile Layout - Vertical Stacking with Collapsible Columns */}
+      <div className="md:hidden space-y-3 h-full overflow-y-auto">
+        {columns.map((column) => (
+          <KanbanColumn
+            key={column.id}
+            column={column}
+            tasks={tasksByColumn[column.id] || []}
+            onTaskMove={handleTaskMoveInternal}
+            onTaskCreate={handleTaskCreateInColumn}
+            onTaskEdit={handleTaskEdit}
+            onTaskDelete={onTaskDelete}
+            draggedTaskId={draggedTaskId}
+            dropTargetIndex={dropTargetColumn === column.id ? dropTargetIndex : null}
+            isDropTarget={dropTargetColumn === column.id}
+            isCollapsed={collapsedColumns.has(column.id)}
+            onToggleCollapse={handleColumnToggle}
+          />
+        ))}
+      </div>
 
       {/* Task Modal */}
       <TaskModal
